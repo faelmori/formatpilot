@@ -1,13 +1,13 @@
-from .converter import LinkedInConverter
+from .converter import FormatPilot
 
 def markdown_to_linkedin(markdown_text: str) -> str:
     """
     Função utilitária para conversão rápida de Markdown para LinkedIn.
     """
-    return LinkedInConverter().convert_markdown_to_linkedin(markdown_text)
+    return FormatPilot().convert_markdown_to_linkedin(markdown_text)
 
 __all__ = [
-    "LinkedInConverter",
+    "FormatPilot",
     "markdown_to_linkedin"
 ]
 

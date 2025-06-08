@@ -51,7 +51,8 @@ classifiers = [
 dependencies = [
   "mistune",
   "flask",
-  "jinja2"
+  "jinja2",
+  "emoji"
 ]
 [project.optional-dependencies]
 test = ["pytest"]

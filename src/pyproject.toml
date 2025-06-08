@@ -50,6 +50,7 @@ classifiers = [
 ]
 dependencies = [
   "mistune",
+  "emoji",
   "flask",
   "jinja2"
 ]

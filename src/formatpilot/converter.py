@@ -6,7 +6,7 @@ As funções incluem a conversão de negrito para maiúsculas, remoção de itá
 import mistune
 import re
 
-class LinkedInConverter:
+class FormatPilot:
     def __init__(self):
         # Inicializa o parser de Markdown
         self.markdown_parser = mistune.create_markdown()
@@ -65,22 +65,17 @@ class LinkedInConverter:
         incluindo suporte a negrito, itálico, listas, blocos de código e blockquotes.
         """
         html = re.sub(r'<(/?p|/?h[1-6])>', '', html_text)
-        html = re.sub(r'<strong>(.*?)</strong>', lambda m: m.group(1).upper(), html)
 
-        # Só aplica quebra dupla se houver texto real após o negrito
-        def bold_break_line(line):
-            match = re.match(r'^([A-ZÁÉÍÓÚÂÊÔÃÕÇ ]+)(\s+)(.+)$', line)
-            if match:
-                bold, _, rest = match.groups()
-                if rest.strip() and not rest.strip().startswith('<') and not rest.strip() == '':
-                    return f"{bold}\n\n{rest.lstrip()}"
-            return line
-        # Só processa linhas que tenham negrito seguido de texto
-        lines = html.splitlines()
-        processed_lines = []
-        for l in lines:
-            processed_lines.append(bold_break_line(l))
-        html = '\n'.join(processed_lines)
+        # Negrito para maiúsculas
+        def bold_break(match):
+            bold = match.group(1).upper()
+            after = match.group(2)
+            # Só insere quebra dupla se houver texto real após o negrito (não só espaços ou fim de string)
+            if after and after.strip():
+                return f"{bold}\n\n{after.lstrip()}"
+            else:
+                return bold
+        html = re.sub(r'<strong>(.*?)</strong>([^<\n]*)', bold_break, html)
 
         html = re.sub(r'<em>(.*?)</em>', lambda m: m.group(1), html)
         html = re.sub(r'<code>(.*?)</code>', lambda m: f'`{m.group(1)}`', html)
@@ -88,5 +83,25 @@ class LinkedInConverter:
         html = re.sub(r'<ul>.*?</ul>', 
                       lambda m: '\n'.join(f'• {item}' for item in re.findall(r'<li>(.*?)</li>', m.group(0))), 
                       html, flags=re.DOTALL)
+        # Conversão de links Markdown para HTML (LinkedIn-friendly)
+        html = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', r'<a href="\2">\1</a>', html)
+
+        # Conversão de emojis Markdown para Unicode (ex: :smile: -> 😄)
+        import emoji
+        html = emoji.emojize(html, language='alias')
+
+        # Conversão de tabelas Markdown para texto formatado (LinkedIn não suporta tabelas)
+        def table_to_text(match):
+            table = match.group(0)
+            lines = [l.strip() for l in table.strip().split('\n') if l.strip()]
+            # Remove separadores de header
+            lines = [l for l in lines if not re.match(r'^[|\s:-]+$', l)]
+            return '\n'.join(' | '.join(cell.strip() for cell in l.strip('|').split('|')) for l in lines)
+        html = re.sub(r'(\|.+\|\n)(\|[:\- ]+\|\n)((\|.+\|\n?)+)', table_to_text, html)
+
+        # Limite de caracteres para LinkedIn (ex: 3000)
+        self.linkedin_char_limit = 3000
+        if len(html) > self.linkedin_char_limit:
+            html += f"\n\n⚠️ Atenção: O texto possui {len(html)} caracteres e excede o limite de {self.linkedin_char_limit} do LinkedIn."
         return html.strip()
 

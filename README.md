@@ -6,75 +6,121 @@
 [![Build Status](https://github.com/faelmori/formatpilot/actions/workflows/python-package.yml/badge.svg)](https://github.com/faelmori/formatpilot/actions)
 [![Downloads](https://static.pepy.tech/badge/formatpilot)](https://pepy.tech/project/formatpilot)
 
-> Conversão e transformação de textos entre múltiplos formatos (Markdown, LinkedIn, HTML, etc) de forma simples e extensível. Com amor da família Mori!
+> Conversion and transformation of texts between multiple formats (Markdown, LinkedIn, HTML, etc) in a simple and extensible way. With love from the Mori family!
 
 ---
 
-## ✨ Visão Geral
+## ✨ Overview
 
-O **formatpilot** é um pacote Python para conversão e transformação de textos entre diversos formatos, como Markdown, HTML e formatos otimizados para LinkedIn. Ideal para desenvolvedores, criadores de conteúdo e automações.
+**formatpilot** is a Python package for converting and transforming texts between various formats, such as Markdown, HTML, and LinkedIn-optimized formats. Ideal for developers, content creators, and automations.
 
-- Conversão de Markdown para LinkedIn
-- Conversão de Markdown para HTML
-- Conversão de HTML para Markdown
-- Fácil extensão para novos formatos
-- API simples e intuitiva
+- Convert Markdown to LinkedIn
+- Convert Markdown to HTML
+- Convert HTML to Markdown
+- Automatic conversion of links and emojis
+- Convert Markdown tables to formatted text
+- LinkedIn character limit warning
+- Easily extensible for new formats
+- Simple and intuitive API
 
-## 🚀 Instalação
+## 🚀 Installation
 
 ```bash
 pip install formatpilot
 ```
 
-## 🛠️ Exemplo de Uso
+## 🛠️ Usage Examples
+
+### Markdown to LinkedIn
 
 ```python
-from formatpilot import markdown_to_linkedin
+from formatpilot import markdown_to_linkedin, FormatPilot
 
 markdown = """
-**Texto em negrito**
+**Bold text** and *italic*
 - Item 1
 - Item 2
+See more at [GitHub](https://github.com)
+:rocket:
 """
 
 linkedin_text = markdown_to_linkedin(markdown)
 print(linkedin_text)
+
+# Or using the main class
+fp = FormatPilot()
+print(fp.convert_markdown_to_linkedin(markdown))
 ```
 
-## 📚 Funcionalidades
+### Markdown Table Conversion
 
-- `markdown_to_linkedin(markdown_text: str) -> str`: Converte Markdown para formato LinkedIn.
-- Classe `LinkedInConverter`: Métodos para conversão entre Markdown, HTML e LinkedIn.
+```python
+from formatpilot import FormatPilot
+markdown = """
+| Name   | Age |
+|--------|-----|
+| Ana    | 30  |
+| Bruno  | 25  |
+"""
+print(FormatPilot().convert_markdown_to_linkedin(markdown))
+# Output:
+# Name | Age
+# Ana | 30
+# Bruno | 25
+```
 
-## 🧩 Extensibilidade
+### LinkedIn Character Limit Warning
 
-Você pode criar seus próprios conversores ou estender as classes existentes para suportar novos formatos de texto.
+```python
+from formatpilot import FormatPilot
+long_text = "A" * 3100
+print(FormatPilot().convert_markdown_to_linkedin(long_text))
+# Output includes limit warning
+```
 
-## 🧪 Testes
+### Markdown Emojis to Unicode
+
+```python
+from formatpilot import FormatPilot
+markdown = "Congratulations on the project! :tada:"
+print(FormatPilot().convert_markdown_to_linkedin(markdown))
+# Output: Congratulations on the project! 🎉
+```
+
+## 📚 Features
+
+- `markdown_to_linkedin(markdown_text: str) -> str`: Converts Markdown to LinkedIn format.
+- `FormatPilot` class: Methods for converting between Markdown, HTML, and LinkedIn.
+
+## 🧩 Extensibility
+
+You can create your own converters or extend the existing classes to support new text formats.
+
+## 🧪 Testing
 
 ```bash
 pytest tests/
 ```
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
+Contributions are welcome! Feel free to open issues or pull requests.
 
-1. Fork este repositório
-2. Crie sua branch (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
+1. Fork this repository
+2. Create your branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
 
-## 📄 Licença
+## 📄 License
 
 MIT © Rafael Mori
 
-## 💌 Contato
+## 💌 Contact
 
 - [GitHub](https://github.com/faelmori/formatpilot)
 - [faelmori@gmail.com](mailto:faelmori@gmail.com)
 
 ---
 
-**Feito com carinho pela família Mori!** ❤️
+**Made with love by the Mori family!** ❤️

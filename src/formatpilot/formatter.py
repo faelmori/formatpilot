@@ -4,11 +4,11 @@ As funções incluem formatação de texto simples, Markdown e HTML, além de ma
 """
 
 from __future__ import annotations
-from converter import LinkedInConverter
+from converter import FormatPilot
 
 class LinkedInFormatter:
     def __init__(self, creative: bool = False):
-        self.converter = LinkedInConverter()
+        self.converter = FormatPilot()
         self.creative = creative
 
     def creative_text_formatter(self, text: str) -> str:
